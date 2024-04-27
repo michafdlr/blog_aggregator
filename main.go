@@ -33,6 +33,7 @@ func main() {
 	mux.HandleFunc("GET /v1/readiness", ReadinessHandler)
 	mux.HandleFunc("GET /v1/error", ErrorHandler)
 	mux.HandleFunc("POST /v1/users", apiCfg.CreateUserHandler)
+	mux.HandleFunc("GET /v1/users", apiCfg.GetCurrentUserHandler)
 
 	corsMux := corsMiddleware(mux)
 	srv := &http.Server{
