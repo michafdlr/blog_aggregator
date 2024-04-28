@@ -35,6 +35,7 @@ func main() {
 	mux.HandleFunc("POST /v1/users", apiCfg.CreateUserHandler)
 	mux.HandleFunc("GET /v1/users", apiCfg.middlewareAuth(apiCfg.GetCurrentUserHandler))
 	mux.HandleFunc("POST /v1/feeds", apiCfg.middlewareAuth(apiCfg.CreateFeedHandler))
+	mux.HandleFunc("GET /v1/feeds", apiCfg.GetFeedsHandler)
 
 	corsMux := corsMiddleware(mux)
 	srv := &http.Server{
