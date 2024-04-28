@@ -1,6 +1,7 @@
 package main
 
 import (
+	"michafdlr/blog_aggregator/internal/database"
 	"net/http"
 	"strings"
 )
@@ -26,4 +27,22 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+type authedHandler func(http.ResponseWriter, *http.Request, database.User)
+
+func (cfg *apiConfig) middlewareAuth(handler authedHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		apiKey, err := GetHeader(r.Header)
+		if err != nil {
+			respondWithError(w, http.StatusUnauthorized, "apikey missing")
+			return
+		}
+		user, err := cfg.DB.GetUserByKey(r.Context(), apiKey)
+		if err != nil {
+			respondWithError(w, http.StatusInternalServerError, "Couldn't find user")
+			return
+		}
+		handler(w, r, user)
+	}
 }
