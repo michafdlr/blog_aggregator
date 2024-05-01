@@ -37,5 +37,26 @@ func (apiCfg *apiConfig) CreateFeedHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	log.Print("New feed created in DB")
-	respondWithJSON(w, http.StatusCreated, databaseFeedToFeed(feed))
+
+	feedFollow, err := apiCfg.DB.CreateFollow(r.Context(), database.CreateFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID:    user.ID,
+		FeedID:    feed.ID,
+	})
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't create feed")
+		return
+	}
+	log.Print("New feedfollow created in DB")
+
+	type response struct {
+		Feed       database.Feed        `json:"feed"`
+		FeedFollow database.FeedsFollow `json:"feed_follow"`
+	}
+	respondWithJSON(w, http.StatusCreated, response{
+		Feed:       feed,
+		FeedFollow: feedFollow,
+	})
 }
