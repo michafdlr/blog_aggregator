@@ -16,12 +16,13 @@ type User struct {
 }
 
 type Feed struct {
-	ID        uuid.UUID
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
-	Url       string
-	UserID    uuid.UUID
+	ID            uuid.UUID
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	Name          string
+	Url           string
+	UserID        uuid.UUID
+	LastFetchedAt time.Time
 }
 
 type FeedsFollow struct {
@@ -42,14 +43,15 @@ func databaseUserToUser(user database.User) User {
 	}
 }
 
-// func databaseFeedToFeed(feed database.Feed) Feed {
+// func databaseFeedToFeed(feed Feed) Feed {
 // 	return Feed{
-// 		ID:        feed.ID,
-// 		CreatedAt: feed.CreatedAt,
-// 		UpdatedAt: feed.UpdatedAt,
-// 		Name:      feed.Name,
-// 		Url:       feed.Url,
-// 		UserID:    feed.UserID,
+// 		ID:            feed.ID,
+// 		CreatedAt:     feed.CreatedAt,
+// 		UpdatedAt:     feed.UpdatedAt,
+// 		Name:          feed.Name,
+// 		Url:           feed.Url,
+// 		UserID:        feed.UserID,
+// 		LastFetchedAt: feed.LastFetchedAt,
 // 	}
 // }
 

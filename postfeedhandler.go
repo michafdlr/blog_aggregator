@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"michafdlr/blog_aggregator/internal/database"
@@ -25,12 +26,13 @@ func (apiCfg *apiConfig) CreateFeedHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	feed, err := apiCfg.DB.CreateFeed(r.Context(), database.CreateFeedParams{
-		ID:        uuid.New(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
-		Name:      params.Name,
-		Url:       params.Url,
-		UserID:    user.ID,
+		ID:            uuid.New(),
+		CreatedAt:     time.Now().UTC(),
+		UpdatedAt:     time.Now().UTC(),
+		Name:          params.Name,
+		Url:           params.Url,
+		UserID:        user.ID,
+		LastFetchedAt: sql.NullTime{Time: time.Now().UTC(), Valid: true},
 	})
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't create feed")
